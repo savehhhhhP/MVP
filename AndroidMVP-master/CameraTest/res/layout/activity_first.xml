@@ -1,0 +1,187 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#ffffff"
+        >
+
+    <com.example.customview.NavigationBar
+            android:id="@+id/navigationBar_edit"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip">
+    </com.example.customview.NavigationBar>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dip" android:layout_weight="1"
+                  android:id="@+id/linearLayout1">
+        <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/relativeLayout5" android:layout_margin="@dimen/rlayoutMargin">
+            <ImageView android:id="@+id/imageView1"
+                       android:layout_width="fill_parent"
+                       android:layout_height="fill_parent"
+                       android:paddingTop="8dp"
+                       android:paddingBottom="30dp"
+                       android:paddingLeft="10dp"
+                       android:paddingRight="12dp"
+                       android:src="@drawable/ic_add"/>
+            <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/imageView1_t"/>
+            <TextView android:id="@+id/textView1" android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"
+                      android:text="点击添加"
+                      android:layout_alignBottom="@+id/imageView1"
+                      android:textSize="@dimen/firstSize"
+                      android:textColor="@color/firstText" android:layout_marginBottom="@dimen/textBottomMargin"/>
+        </RelativeLayout>
+        <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/relativeLayout6" android:layout_margin="@dimen/rlayoutMargin">
+            <ImageView android:id="@+id/imageView2" android:layout_width="fill_parent" android:layout_weight="5"
+                       android:layout_height="fill_parent" android:paddingTop="8dp" android:paddingBottom="30dp"
+                       android:paddingLeft="10dp" android:paddingRight="12dp" android:src="@drawable/ic_add"/>
+            <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent"
+                       android:id="@+id/imageView2_t"/>
+            <TextView android:id="@+id/textView2" android:layout_width="fill_parent"
+                      android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center_horizontal"
+                      android:text="点击添加" android:layout_alignBottom="@+id/imageView2"
+                      android:textColor="@color/firstText" android:textSize="@dimen/firstSize"
+                      android:layout_marginBottom="@dimen/textBottomMargin"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dip" android:layout_weight="1"
+                  android:id="@+id/linearLayout">
+        <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/relativeLayout3" android:layout_margin="@dimen/rlayoutMargin">
+            <ImageView android:id="@+id/imageView3" android:layout_width="fill_parent" android:layout_weight="5"
+                       android:layout_height="fill_parent" android:paddingTop="8dp" android:paddingBottom="30dp"
+                       android:paddingLeft="10dp" android:paddingRight="12dp" android:src="@drawable/ic_add"/>
+            <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent"
+                       android:id="@+id/imageView3_t"/>
+            <TextView android:id="@+id/textView3" android:layout_width="fill_parent"
+                      android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center_horizontal"
+                      android:text="点击添加" android:layout_alignBottom="@+id/imageView3"
+                      android:textSize="@dimen/firstSize" android:textColor="@color/firstText"
+                      android:layout_marginBottom="@dimen/textBottomMargin"/>
+        </RelativeLayout>
+        <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/relativeLayout4" android:layout_margin="@dimen/rlayoutMargin">
+            <ImageView android:id="@+id/imageView4" android:layout_width="fill_parent" android:layout_weight="5"
+                       android:layout_height="fill_parent" android:paddingTop="8dp" android:paddingBottom="30dp"
+                       android:paddingLeft="10dp" android:paddingRight="12dp" android:src="@drawable/ic_add"/>
+            <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent"
+                       android:id="@+id/imageView4_t"/>
+            <TextView android:id="@+id/textView4" android:layout_width="fill_parent"
+                      android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center_horizontal"
+                      android:text="点击添加" android:layout_alignBottom="@+id/imageView4"
+                      android:textColor="@color/firstText" android:textSize="@dimen/firstSize"
+                      android:layout_marginBottom="@dimen/textBottomMargin"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+
+            >
+        <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/relativeLayout2" android:layout_margin="@dimen/rlayoutMargin">
+            <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="5"
+                    android:layout_height="fill_parent"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="30dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="12dp"
+                    android:src="@drawable/ic_add"/>
+            <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent"
+                       android:id="@+id/imageView5_t"/>
+            <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="点击添加" android:layout_alignBottom="@+id/imageView5"
+                    android:textSize="@dimen/firstSize" android:textColor="@color/firstText"
+                    android:layout_marginBottom="@dimen/textBottomMargin"/>
+        </RelativeLayout>
+        <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/relativeLayout1" android:layout_margin="@dimen/rlayoutMargin">
+            <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="5"
+                    android:layout_height="fill_parent"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="30dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="12dp"
+                    android:src="@drawable/ic_add"/>
+            <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent"
+                       android:id="@+id/imageView6_t"/>
+            <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="点击添加" android:layout_alignBottom="@+id/imageView6"
+                    android:textColor="@color/firstText" android:textSize="@dimen/firstSize"
+                    android:layout_marginBottom="@dimen/textBottomMargin"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dip"-->
+            <!--android:layout_weight="1"-->
+            <!-->-->
+        <!--<RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"-->
+                        <!--android:id="@+id/relativeLayout">-->
+            <!--<ImageView-->
+                    <!--android:id="@+id/imageView7"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="fill_parent"-->
+                    <!--android:paddingTop="8dp"-->
+                    <!--android:paddingBottom="30dp"-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:paddingRight="12dp"-->
+                    <!--android:src="@drawable/ic_add"/>-->
+            <!--<TextView-->
+                    <!--android:id="@+id/textView7"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center_horizontal"-->
+                    <!--android:text="点击添加" android:layout_gravity="bottom" android:layout_alignBottom="@+id/imageView7"-->
+                    <!--android:textSize="@dimen/firstSize" android:textColor="@color/firstText"/>-->
+        <!--</RelativeLayout>-->
+        <!--<RelativeLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent" android:layout_weight="1">-->
+            <!--<ImageView-->
+                    <!--android:id="@+id/imageView8"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_weight="5"-->
+                    <!--android:layout_height="fill_parent"-->
+                    <!--android:paddingTop="8dp"-->
+                    <!--android:paddingBottom="30dp"-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:paddingRight="12dp"-->
+                    <!--android:src="@drawable/ic_add"/>-->
+            <!--<TextView-->
+                    <!--android:id="@+id/textView8"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="点击添加" android:gravity="center_horizontal"-->
+                    <!--android:layout_alignBottom="@+id/imageView8" android:textColor="@color/firstText"-->
+                    <!--android:textSize="@dimen/firstSize"/>-->
+        <!--</RelativeLayout>-->
+    <!--</LinearLayout>-->
+
+</LinearLayout>
