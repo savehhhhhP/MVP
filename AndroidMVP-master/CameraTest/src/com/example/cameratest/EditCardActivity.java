@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,10 +74,11 @@ public class EditCardActivity extends Activity implements OnClickListener {
     EditText cardnameET;
     String returnString;
 
-
+    private static final int REQUEST_ALBUM = 0;
     private static final int REQUEST_CAMERA = 1;
     private static final int REQUEST_CALENDAR = 2;
-
+    private static final int REQUEST_CAMERA_CROP =3;
+    private static final int REQUEST_ALBUM_CROP =4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,6 +148,7 @@ public class EditCardActivity extends Activity implements OnClickListener {
     }
 
     //    -----------------------------------------------------------
+    Uri tempFileUri;                      //拍照后照片的Uri
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -156,19 +159,21 @@ public class EditCardActivity extends Activity implements OnClickListener {
                 AlertDialog dlg = new AlertDialog.Builder(EditCardActivity.this).setTitle("选择图片").setItems(items,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
-                                if (item == 1) {
+                                if (item == 1) {                                  //拍照
                                     File sdcardTempFile = new File(Constants.dir_path_pic, image_filename);
                                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                                    Uri u = Uri.fromFile(sdcardTempFile);
+                                    tempFileUri = Uri.fromFile(sdcardTempFile);
                                     intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, u);
+                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
                                     intent.putExtra("return-data", true);
                                     startActivityForResult(intent, REQUEST_CAMERA);
-                                } else {
+                                } else {                                          //相册
+                                    File sdcardTempFile = new File(Constants.dir_path_pic, image_filename);
+                                    tempFileUri = Uri.fromFile(sdcardTempFile);
                                     Intent getImage = new Intent(Intent.ACTION_GET_CONTENT);
                                     getImage.addCategory(Intent.CATEGORY_OPENABLE);
                                     getImage.setType("image/jpeg");
-                                    startActivityForResult(getImage, 0);
+                                    startActivityForResult(getImage, REQUEST_ALBUM);
                                 }
                             }
                         }).create();
@@ -177,6 +182,28 @@ public class EditCardActivity extends Activity implements OnClickListener {
             break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 裁剪图片
+     */
+    public void performCrop(Uri uri, Uri output, int request) {
+        try {
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            Log.i("corp image", "载入裁剪");
+            intent.setDataAndType(uri, "image/*");//设置要裁剪的图片
+            Log.i("corp image", "载入图片");
+            intent.putExtra("crop", "true");// crop=true 有这句才能出来最后的裁剪页面.
+            intent.putExtra("aspectX", 5);// 这两项为裁剪框的比例.
+            intent.putExtra("aspectY", 4);// x:y=5:4
+            intent.putExtra("output", output);//保存到ouotput
+            intent.putExtra("outputFormat", "JPEG");// 返回格式
+            startActivityForResult(intent, request);
+        } catch (ActivityNotFoundException anfe) {
+            String errorMessage = "Whoops - your device doesn't support the crop action!";
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
@@ -334,28 +361,12 @@ public class EditCardActivity extends Activity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         ContentResolver resolver = getContentResolver();
-        if (requestCode == 0) {
+        if (requestCode == REQUEST_ALBUM) {                                //选择了相册
             try {
                 if (data != null) {
                     Uri originalUri = data.getData();
                     if (originalUri != null) {
-                        preview.setImageURI(originalUri);
-//                       // 将图片内容解析成字节数组  
-                        mContent = readStream(resolver.openInputStream(Uri.parse(originalUri.toString())));
-//                       // 将字节数组转换为ImageView可调用的Bitmap对象  
-                        myBitmap = getPicFromBytes(mContent, null);
-                        File f = new File(Constants.dir_path_pic + image_filename);
-                        f.createNewFile();
-                        FileOutputStream fOut = null;
-                        try {
-                            fOut = new FileOutputStream(f);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        myBitmap.compress(Bitmap.CompressFormat.JPEG, 30, fOut);
-                        myBitmap.recycle();
-                        originalUri = null;
-                        f = null;
+                        performCrop(originalUri, tempFileUri, REQUEST_ALBUM_CROP);
                         imageFlag = true;
                     }
                 }
@@ -363,31 +374,52 @@ public class EditCardActivity extends Activity implements OnClickListener {
                 System.out.println(e.getMessage());
             }
 
+        } else if (requestCode == REQUEST_ALBUM_CROP) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    try {
+                        Bitmap bm=BitmapFactory.decodeFile(Constants.dir_path_pic + image_filename);
+                        preview.setImageBitmap(bm);
+                        // 将图片内容解析成字节数组
+                        mContent = readStream(resolver.openInputStream(Uri.parse(tempFileUri.toString())));
+                        // 将字节数组转换为ImageView可调用的Bitmap对象
+                        myBitmap = getPicFromBytes(mContent, null);
+                        File f = new File(Constants.dir_path_pic + image_filename);
+                        f.createNewFile();
+                        FileOutputStream fOut = null;
+
+                        fOut = new FileOutputStream(f);
+                        myBitmap.compress(Bitmap.CompressFormat.JPEG, 30, fOut);
+                        myBitmap.recycle();
+                        fOut.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         } else if (requestCode == REQUEST_CAMERA) {
             try {
 //            	这是照片方法
                 super.onActivityResult(requestCode, resultCode, data);
                 if (resultCode == RESULT_OK) {
-                    Log.i("sjl", "data is RESULT_OK");
-                    String path = Constants.dir_path_pic + image_filename;
-                    Uri u = Uri.fromFile(new File(path));
-                    Log.i("sjl", "即将刷新");
-                    preview.setImageURI(null);
-                    preview.setImageURI(u);
-                    imageFlag = true;
+                    Log.i("lxl", "照相完成。");
+                    performCrop(tempFileUri, tempFileUri, REQUEST_CAMERA_CROP);
                     return;
                 }
-//                Bundle extras = data.getExtras(); 
-//                myBitmap = (Bitmap) extras.get("data");  
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-//                myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);  
-//                mContent = baos.toByteArray();  
             } catch (Exception e) {
                 e.printStackTrace();
             }
             // 把得到的图片绑定在控件上显示  
 //            preview.setImageBitmap(myBitmap);
 //            preview.setImageBitmap(ImageUtil.toRoundCorner(myBitmap, 10));//把拍摄的照片转成圆角显示在预览控件上  
+        }else if(requestCode == REQUEST_CAMERA_CROP){                //剪裁方法
+            if (resultCode == RESULT_OK) {
+                Bitmap bm=BitmapFactory.decodeFile(Constants.dir_path_pic + image_filename);
+                preview.setImageBitmap(bm);
+                //preview.setImageURI(Uri.fromFile(new File(Constants.dir_path_pic + image_filename)));
+                tempFileUri = null;
+                imageFlag = true;
+            }
         } else if (requestCode == REQUEST_CALENDAR) {
             if (resultCode == RESULT_OK) {
 //                happenDate.setCalendar(data.getIntExtra("year", 1900), data.getIntExtra("month", 0), data.getIntExtra("day", 1));  
