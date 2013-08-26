@@ -119,7 +119,8 @@ public class CoverCardActivity extends Activity {
             data.putExtra("audio", audio);
             data.putExtra("_id", _id);
             data.putExtra("position", replacePosition);
-            myDbHelper.insertIntoCard_tree(_id, parent, replacePosition);
+            data.putExtra("parent",parent);
+            //myDbHelper.insertIntoCard_tree(_id, parent, replacePosition);  提交到数据库删除到firstActivity
 //			根据前一个页面传递过来的   position parent 创建纪录
             setResult(resultCode, data);
             Log.i("lxl", "正在更新数据库 返回2*8页面");

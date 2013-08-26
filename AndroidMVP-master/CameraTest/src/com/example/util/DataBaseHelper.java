@@ -417,7 +417,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     card.setPosition(position);
                     card.setImage_filename(image_filename);
                     card.setAudio_filename(audio_filename);
-                    card.setUsed(false);   //设置卡片使用状态为未使用
                     cardMap.put(position, card);
                 }
             }

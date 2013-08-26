@@ -32,14 +32,13 @@ import android.widget.Toast;
 
 import com.example.customview.NavigationBar;
 import com.example.po.Card;
-import com.example.util.Constants;
-import com.example.util.DataBaseHelper;
-import com.example.util.DataSyn;
-import com.example.util.GlobalUtil;
+import com.example.util.*;
 import com.umeng.analytics.MobclickAgent;
 
 public class FirstActivity extends Activity {
     public static final  String TAG = "FirstActivity";
+    private static final int REQUEST_COVER = 10;
+
 
     NavigationBar nb;                                            //导航条
     ImageView iv1;
@@ -63,6 +62,7 @@ public class FirstActivity extends Activity {
     TextView tv5;
     TextView tv6;
     Map<Integer, Card> cardMap;
+    static useCardServer cardUsedserver=null;
 
     String parent;
 
@@ -95,6 +95,10 @@ public class FirstActivity extends Activity {
 
     public void init() {
         myHandler = new MyHandler();
+        if(cardUsedserver==null){
+            cardUsedserver = new useCardServer();
+        }
+
         sp = getSharedPreferences("xiaoyudi", 0);
         firstTime = sp.getBoolean("firstTime", true);
         images = this.getResources().getStringArray(R.array.images);
@@ -153,12 +157,11 @@ public class FirstActivity extends Activity {
             while (it.hasNext()) {
                 Integer key = (Integer) it.next();
                 Card cardItem = cardMap.get(key);
-                cardItem.setUsed(true);                                           //设置卡片使用状态为已使用
+                cardUsedserver.addCard(cardItem,true);                                           //设置卡片使用状态为已使用
                 int position = cardItem.getPosition();
                 Log.i(TAG, "正在初始化页面的各个ITEM cardItem.getImage_filename():" + cardItem.getImage_filename());
                 Bitmap mybitmap = GlobalUtil.preHandleImage(null, Constants.dir_path_pic + cardItem.getImage_filename());    //获得图片到 bitmap 之后放到imageViewList  ，循环结束后所有imageView都有图片
                 ivList.get(position).setImageBitmap(mybitmap);
-
                 if (cardItem.getType().equals(Constants.TYPE_CATEGORY)) {                            //lxl设置目录和一般card的相框样式
                     ivList_t.get(position).setImageResource(R.drawable.ic_category);
                 } else {
@@ -274,6 +277,7 @@ public class FirstActivity extends Activity {
     }
 
     public class ImageViewLongClickListener implements OnLongClickListener {
+
         Intent intent;
 
         public ImageViewLongClickListener(Intent intent) {
@@ -284,21 +288,22 @@ public class FirstActivity extends Activity {
         public boolean onLongClick(View v) {
 //			需要在这传给第二个界面  当前页面已经有的布局 就不要给用户机会重复选择了.. by sjl 2013 0726
             Log.i(TAG, "点击事件得到的position:" + intent.getIntExtra("position", 0));
-            startActivityForResult(intent, 10);
+            startActivityForResult(intent, REQUEST_COVER);
             return false;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 10) {              //数据返回
+        if (requestCode == REQUEST_COVER) {                                              //从选取替换的页面返回
             if (resultCode == 3) {
+                int position = data.getIntExtra("position", 0);
                 String name = data.getStringExtra("name");
                 String image = data.getStringExtra("image");
                 String audio = data.getStringExtra("audio");
                 String _id = data.getStringExtra("_id");
                 String type = data.getStringExtra("type");
-                int position = data.getIntExtra("position", 0);
+                String parent_ = data.getStringExtra("parent");
                 Card card = new Card();
                 card.setName(name);
                 card.setAudio(audio);
@@ -306,30 +311,40 @@ public class FirstActivity extends Activity {
                 card.setImage(image);
                 card.setPosition(position);
                 card.setType(type);
+                //此处添加了功能 只能添加一次目录，修复重复添加目录造成的循环异常
+                if(cardUsedserver.isCardUsed(card) && type.equals("category")){           //目录已经添加过，拒绝添加
+                    Toast.makeText(FirstActivity.this,"您选择的分类已经添加过，不能重复添加！",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                cardUsedserver.addCard(card,true);                       //设置替换后卡片为已使用
+                if(cardMap.get(position)!=null){                         //避免没有卡片情况时候出现nullpointer异常
+                    cardUsedserver.setCardUsed(cardMap.get(position),false);                            //设置被替换卡片为未使用
+                }
+                //----------------------------------------------
+
 //				用新选择的CARD替换原有的Card
                 cardMap.put(position, card);
                 String filename = myDbHelper.queryFilename(image);
 //				begin 正在修改  选取图片引起的oom错误   by sjl 2013 07 31
                 Bitmap mybitmap = GlobalUtil.preHandleImage(ivList.get(position), Constants.dir_path_pic + filename);
                 mybitmap = GlobalUtil.small(mybitmap);                        //lxl对选择的图片进行缩放之后放到所选择的要替换的图片（）上
-                Log.i(TAG, "缩放了...");
                 ivList.get(position).setImageBitmap(mybitmap);
                 mybitmap.recycle();
-                mybitmap = null;
-
 //				end
                 Log.i(TAG, "正在渲染图片.." + position);
                 if (type.equals(Constants.TYPE_CATEGORY)) {
-                    ivList_t.get(position).setBackgroundResource(R.drawable.ic_category);
+                    setCategoryForResource(ivList_t,position,R.drawable.ic_category);
                 } else {
-                    ivList_t.get(position).setBackgroundResource(R.drawable.ic_card);
+                    setCategoryForResource(ivList_t, position, R.drawable.ic_card);
                 }
-//				picFile=null;
-//				uri=null;
                 tvList.get(position).setText(name);
-                Log.i(TAG, "长按添加  返回到原页面   正在渲染 图片cardname:" + name);
+                myDbHelper.insertIntoCard_tree(_id,parent_, position);              //替换的卡片提交到数据库
             }
         }
+    }
+
+    private void setCategoryForResource(List<ImageView> iv,int position,int resId) {
+        iv.get(position).setImageResource(resId);
     }
 
     int flag = 0;

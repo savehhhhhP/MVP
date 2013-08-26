@@ -179,10 +179,6 @@ public class ChildActivity extends Activity {
                     }
                     tvList.get(position).setText(cardItem.getName());
                 }
-
-//					picFile=null;
-//					uri=null;
-
             }
         }
         for (int i = 1; i < displayFlag.length; i++) {
