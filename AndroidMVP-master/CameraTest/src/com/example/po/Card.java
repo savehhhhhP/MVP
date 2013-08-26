@@ -7,8 +7,40 @@ public class Card {
     public String image;
     public String audio;
     public int position;
+    public boolean Used;
     public String image_filename;
     public String audio_filename;
+
+    public Card() {
+        this.id = "";
+        this.type = "";
+        this.name = "";
+        this.image = "";
+        this.audio = "";
+        this.position = 0;
+        Used = false;
+        this.image_filename = "";
+        this.audio_filename = "";
+    }
+
+    public Card(String id, String type, String name, String image, String audio, int position, boolean used, String image_filename, String audio_filename) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.image = image;
+        this.audio = audio;
+        this.position = position;
+        Used = used;
+        this.image_filename = image_filename;
+        this.audio_filename = audio_filename;
+    }
+
+    public void setUsed(boolean is){
+        Used = is;
+    }
+    public boolean isUsed(){
+        return Used;
+    }
 
     public int getPosition() {
         return position;

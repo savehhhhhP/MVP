@@ -78,11 +78,11 @@ public class CoverCardActivity extends Activity {
         lv = (ListView) findViewById(R.id.listView);
         catLv = (ListView) findViewById(R.id.listView2);
         myDbHelper = DataBaseHelper.getDataBaseHelper(CoverCardActivity.this);
-        datasource4card = myDbHelper.getDataSource(Constants.TYPE_CARD);
+        datasource4card = myDbHelper.getDataSource(Constants.TYPE_CARD);                           //加载卡片信息
         SimpleCursorAdapter adapter4card = new SimpleCursorAdapter(CoverCardActivity.this, R.layout.listitem, datasource4card, new String[]{"name"}, new int[]{R.id.listitem});
         lv.setAdapter(adapter4card);
 
-        datasource4cato = myDbHelper.getDataSource(Constants.TYPE_CATEGORY);
+        datasource4cato = myDbHelper.getDataSource(Constants.TYPE_CATEGORY);                       //加载目录信息
         SimpleCursorAdapter adapter4cato = new SimpleCursorAdapter(CoverCardActivity.this, R.layout.listitem, datasource4cato, new String[]{"name"}, new int[]{R.id.listitem});
         catLv.setAdapter(adapter4cato);
 

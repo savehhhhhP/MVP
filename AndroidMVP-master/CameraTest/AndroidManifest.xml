@@ -30,7 +30,7 @@
 
     <application
             android:allowBackup="true"
-            android:icon="@drawable/ic_launcher1"
+            android:icon="@drawable/icon4adult"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <uses-library android:name="android.test.runner" />
@@ -53,6 +53,7 @@
         <activity
                 android:name="com.example.cameratest.FirstActivity"
                 android:label="@string/title_activity_first"
+                android:icon="@drawable/icon4adult"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

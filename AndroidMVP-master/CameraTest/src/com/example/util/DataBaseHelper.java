@@ -30,6 +30,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
     private static DataBaseHelper dataBaseHelper;
 
+    /**
+     * 根据id获取根节点
+     * @param UserId 用户id
+     * @return 父节点UUID
+     */
+    public String getParent(String UserId){
+        String parent="";
+        Cursor c = getUserId(UserId);
+        if (c != null) {
+            while (c.moveToNext()) {
+                parent = c.getString(c.getColumnIndex("_id"));
+            }
+        }
+        return parent;
+    }
 
     /**
      * Constructor Takes and keeps a reference of the passed context in order to
@@ -269,6 +284,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getUserId(String id) {
+        Cursor c = myDataBase.rawQuery("SELECT root_category as _id FROM user WHERE id = ?", new String[]{id});
+        return c;
+    }
+
     /**
      * 插入目录
      *
@@ -397,6 +417,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     card.setPosition(position);
                     card.setImage_filename(image_filename);
                     card.setAudio_filename(audio_filename);
+                    card.setUsed(false);   //设置卡片使用状态为未使用
                     cardMap.put(position, card);
                 }
             }

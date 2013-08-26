@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,7 +63,7 @@ public class FirstActivity extends Activity {
     TextView tv5;
     TextView tv6;
     Map<Integer, Card> cardMap;
-    DataBaseHelper myDbHelper;                                  //数据库
+
     String parent;
 
     MyHandler myHandler;
@@ -73,25 +74,31 @@ public class FirstActivity extends Activity {
 
     SharedPreferences sp;
     boolean firstTime;
-    private Builder ADialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
         init();            //lxl系统初始化         对于是否第一次启动给出判断
+        initDataBase();    //初始化数据库
         initUI();          //lxl界面初始化
         initDir();         //lxl应用第一次启动的时候  初始化 所有需要的路径文件夹      YY PIC
         initCards();
 //		由于 已经在数据库方面做了改进  第一次启动的时候会 将APK中的DB文件覆盖用户的数据库  所以 暂时不用在这判断  是否是第一次启动进行数据的初始化操作
 //		if(!firstTime){initData();} 
     }
+    DataBaseHelper myDbHelper;                                  //数据库
+    private void initDataBase() {
+        myDbHelper = DataBaseHelper.getDataBaseHelper(FirstActivity.this);           //lxl获取数据库
+
+    }
 
     public void init() {
         myHandler = new MyHandler();
         sp = getSharedPreferences("xiaoyudi", 0);
         firstTime = sp.getBoolean("firstTime", true);
-        Log.i(TAG, "是不是第一次启动" + firstTime);
+        images = this.getResources().getStringArray(R.array.images);
+        audios = this.getResources().getStringArray(R.array.audios);
     }
 
     @Override
@@ -125,9 +132,6 @@ public class FirstActivity extends Activity {
     String[] audios ;
 
     public void initCards() {
-//     应用第一次启动的时候  初始化数据库
-        images = this.getResources().getStringArray(R.array.images);
-        audios = this.getResources().getStringArray(R.array.audios);
         try {
             String path_image = GlobalUtil.getExternalAbsolutePath(this) + "/" + "XIAOYUDI" + "/PIC/";
             String path_audio = GlobalUtil.getExternalAbsolutePath(this) + "/" + "XIAOYUDI" + "/YY/";
@@ -136,23 +140,20 @@ public class FirstActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myDbHelper = DataBaseHelper.getDataBaseHelper(FirstActivity.this);           //lxl获取数据库
-        cardMap = myDbHelper.getChildsByParent(parent);                                 //lxl根据父节点取得孩子节点内容
-
+        cardMap = myDbHelper.getChildsByParent(parent);                              //lxl根据父节点取得孩子节点内容
 //		begin 以下是 为了在编辑界面返回到主页面的时候  刷新出现内容不同步的 临时解决方案
         for (int i = 1; i < ivList.size(); i++) {
             ivList.get(i).setImageResource(R.drawable.ic_add);
-//			ivList.get(i).setBackgroundResource(R.drawable.ic_add);
         }
 //		end by 2013 07 31
         Log.i(TAG, "parent id is :" + parent);
         if (cardMap != null) {
             Log.i(TAG, "cardlist.size is " + cardMap.size());
-
             Iterator it = cardMap.keySet().iterator();
             while (it.hasNext()) {
                 Integer key = (Integer) it.next();
                 Card cardItem = cardMap.get(key);
+                cardItem.setUsed(true);                                           //设置卡片使用状态为已使用
                 int position = cardItem.getPosition();
                 Log.i(TAG, "正在初始化页面的各个ITEM cardItem.getImage_filename():" + cardItem.getImage_filename());
                 Bitmap mybitmap = GlobalUtil.preHandleImage(null, Constants.dir_path_pic + cardItem.getImage_filename());    //获得图片到 bitmap 之后放到imageViewList  ，循环结束后所有imageView都有图片
@@ -290,7 +291,7 @@ public class FirstActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 10) {
+        if (requestCode == 10) {              //数据返回
             if (resultCode == 3) {
                 String name = data.getStringExtra("name");
                 String image = data.getStringExtra("image");
@@ -475,8 +476,9 @@ public class FirstActivity extends Activity {
         isLauchPage = intent.getBooleanExtra("isLauchPage", true);       //取得是否为目录节点的信息，并且做出不同操作
         if (isLauchPage) {
             initNavigationBar();
-//			初始化  首页父节点   应该动态从数据库读取  有待完善 
-            parent = getString(R.string.firstParent);
+//			初始化  首页父节点  从数据库读取
+            parent =myDbHelper.getParent(getString(R.string.firstParent));
+            Log.i(TAG,parent+ "");
         } else {
             iv1.setImageResource(R.drawable.ic_return);
             tv1.setText("返回");
