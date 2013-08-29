@@ -103,8 +103,19 @@ public class FirstActivity extends Activity {
 
         sp = getSharedPreferences("xiaoyudi", 0);
         firstTime = sp.getBoolean("firstTime", true);
-        images = this.getResources().getStringArray(R.array.images);
-        audios = this.getResources().getStringArray(R.array.audios);
+        //第一次启动时候复制资源到手机XIAOYUDI目录
+        if(firstTime){
+            images = this.getResources().getStringArray(R.array.images);
+            audios = this.getResources().getStringArray(R.array.audios);
+            try {
+                String path_image = GlobalUtil.getExternalAbsolutePath(this) + "/" + "XIAOYUDI" + "/PIC/";
+                String path_audio = GlobalUtil.getExternalAbsolutePath(this) + "/" + "XIAOYUDI" + "/YY/";
+                copyAssets(images, path_image);  //复制资源 图片
+                copyAssets(audios, path_audio);  //复制资源 声音
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -138,14 +149,7 @@ public class FirstActivity extends Activity {
     String[] audios ;
 
     public void initCards() {
-        try {
-            String path_image = GlobalUtil.getExternalAbsolutePath(this) + "/" + "XIAOYUDI" + "/PIC/";
-            String path_audio = GlobalUtil.getExternalAbsolutePath(this) + "/" + "XIAOYUDI" + "/YY/";
-            copyAssets(images, path_image);  //复制资源 图片
-            copyAssets(audios, path_audio);  //复制资源 声音
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         cardMap = myDbHelper.getChildsByParent(parent);                              //lxl根据父节点取得孩子节点内容
 //		begin 以下是 为了在编辑界面返回到主页面的时候  刷新出现内容不同步的 临时解决方案
         for (int i = 1; i < ivList.size(); i++) {
@@ -161,9 +165,13 @@ public class FirstActivity extends Activity {
                 Card cardItem = cardMap.get(key);
                 cardUsedserver.addCard(cardItem,true);                                           //设置卡片使用状态为已使用
                 int position = cardItem.getPosition();
-                Log.i(TAG, "正在初始化页面的各个ITEM cardItem.getImage_filename():" + cardItem.getImage_filename());
+                Log.i(TAG, "正在设置图片");
                 Bitmap mybitmap = GlobalUtil.preHandleImage(null, Constants.dir_path_pic + cardItem.getImage_filename());    //获得图片到 bitmap 之后放到imageViewList  ，循环结束后所有imageView都有图片
-                ivList.get(position).setImageBitmap(mybitmap);
+                Log.i(TAG, "获得了资源");
+                if(mybitmap!=null){
+                    ivList.get(position).setImageBitmap(mybitmap);
+                }
+                Log.i(TAG,ivList.get(position).toString());
                 if (cardItem.getType().equals(Constants.TYPE_CATEGORY)) {                            //lxl设置目录和一般card的相框样式
                     ivList_t.get(position).setImageResource(R.drawable.ic_category);
                 } else {
@@ -218,7 +226,7 @@ public class FirstActivity extends Activity {
         AlertDialog.Builder builder = new Builder(FirstActivity.this);
         //标题
         builder.setTitle("注意！");
-        builder.setMessage("您将进行的同步有可能丢失当前数据，确认同步？");
+        builder.setMessage("您将进行的同步将会丢失当前数据，确认同步？");
         builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -268,8 +276,6 @@ public class FirstActivity extends Activity {
                         startActivity(intent);
                     } else {
                         Toast.makeText(FirstActivity.this, getString(R.string.FirstActivity_msg_cover), Toast.LENGTH_SHORT).show();
-                        iv1.startAnimation(anim);
-                        iv1_t.startAnimation(anim);
                     }
                 } else {
                     Toast.makeText(FirstActivity.this, getString(R.string.FirstActivity_msg_cover), Toast.LENGTH_SHORT).show();
@@ -411,13 +417,20 @@ public class FirstActivity extends Activity {
                 try{
                     String synData;
                     synData = DataSyn.getJsonString(Constants.GET_SQL);        //此处获得了SQL数据
+                    Log.i(TAG,"get sql");
                     DataSyn.formatSql(synData);                                //更新数据表
                     String mainifestData = DataSyn.getJsonString(Constants.GET_MAINIFEST); //获得mainfest数据
+                    Log.i(TAG,"get mainfest");
                     Map<String,String> mapMain = DataSyn.getMainifest(mainifestData);     //解析mainfest数据
-                    int i=0;
-
-                    DataSyn.getResourceString(Constants.GET_FILE_PATH+mapMain.get("id_0"),myDbHelper.getFilename(mapMain.get("id_0")),Constants.dir_path_pic);
-                    DataSyn.getResourceString(Constants.GET_FILE_PATH+mapMain.get("id_1"),myDbHelper.getFilename(mapMain.get("id_1")),Constants.dir_path_yy);
+                    int i=0,length=0;
+                    length=Integer.parseInt(mapMain.get("length"));                                      //获取文件资源的个数
+                    Log.i(TAG,""+length);
+                    for(;i<length;i++){
+                        String fileKey = "id_"+i;
+                        DataSyn.getResourceString(Constants.GET_FILE_PATH+mapMain.get(fileKey),myDbHelper.getFilename(mapMain.get(fileKey)),Constants.dir_path_pic);
+                    }
+                    Log.i(TAG,"get file");
+                    //DataSyn.getResourceString(Constants.GET_FILE_PATH+mapMain.get("id_1"),myDbHelper.getFilename(mapMain.get("id_1")),Constants.dir_path_yy);
 
                     Message msg = new Message();
                     Bundle b = new Bundle();//存放数据
@@ -459,12 +472,9 @@ public class FirstActivity extends Activity {
 
 
     boolean isLauchPage;
-    Animation anim;
-
 
     public void initUI() {
         //动画资源获取
-        anim = AnimationUtils.loadAnimation(this,R.anim.anim);
         ivList = new ArrayList<ImageView>();
         ivList_t = new ArrayList<ImageView>();
         tvList = new ArrayList<TextView>();

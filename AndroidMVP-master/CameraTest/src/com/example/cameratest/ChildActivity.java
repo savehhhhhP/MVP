@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,8 +107,9 @@ public class ChildActivity extends Activity {
                         intent.setClass(ChildActivity.this, ChildActivity.class);
                         startActivity(intent);
                     } else {
+                        ivList.get(position).startAnimation(anim);
+                        Toast.makeText(ChildActivity.this, "dadafasdfasdfadf", Toast.LENGTH_SHORT).show();
                         File audioFile = new File(Constants.dir_path_yy + cardItem.getAudio_filename());
-
                         if (audioFile != null && audioFile.exists()) {
                             MediaPlayer mp = MediaPlayer.create(ChildActivity.this, Uri.fromFile(audioFile));
                             if (mp != null) {
@@ -197,8 +200,10 @@ public class ChildActivity extends Activity {
     }
 
     boolean isLauchPage;
+    Animation anim;
 
     public void initUI() {
+        anim = AnimationUtils.loadAnimation(this, R.anim.anim);
         ivList = new ArrayList<ImageView>();
         ivList_t = new ArrayList<ImageView>();
         tvList = new ArrayList<TextView>();

@@ -25,7 +25,7 @@ import java.util.Map;
  *
  */
 public class DataSyn {
-
+    static final String TAG= "DataSyn";
 
     /**
      * ÏÂÔØÍøÂç×ÊÔ´
@@ -144,6 +144,8 @@ public class DataSyn {
             }
         }
         reader.endObject();
+        Log.i(TAG,""+i);
+        map.put("length",i+"");
         return map;
     }
 
