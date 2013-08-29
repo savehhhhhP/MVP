@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.cameratest.R;
 import com.example.util.Constants;
 import com.example.util.DataBaseHelper;
+import com.example.util.DataSyn;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import org.json.JSONObject;
@@ -23,7 +24,6 @@ import java.util.Vector;
 
 import static com.example.testUnit.MediaFile.isAudioFileType;
 import static com.example.util.DataBaseHelper.getDataBaseHelper;
-import static com.example.util.DataSyn.deleteFile;
 
 
 /**
@@ -39,8 +39,8 @@ public class testUnit extends AndroidTestCase {
     public void testOne(){
         try{
             //getResourceString("http://115.28.35.182/file/ffb1a3e6-448d-44e0-adc6-3c6cd0b82043");
-            DataBaseHelper dp =getDataBaseHelper(this.getContext());
-            Log.i(TAG,dp.getParent("1289dede-9b66-4dad-bfdc-3bb57cc7048f"));
+            DataSyn.delFile(Constants.dir_path_pic);
+            Log.i(TAG,"1289dede-9b66-4dad-bfdc-3bb57cc7048f");
         }catch (Exception e){
             Log.i(TAG,"test1 error"+e.toString());
         }

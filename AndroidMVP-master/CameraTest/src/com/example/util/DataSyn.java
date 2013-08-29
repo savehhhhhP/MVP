@@ -60,7 +60,7 @@ public class DataSyn {
     /**
      * 删除现有资源
      */
-    public static void deleteFile(String filePath) {
+    public static void delFile(String filePath) {
         File extDir = new File(filePath);
         File[] files = extDir.listFiles();
         for(int i=0;i<files.length;i++){

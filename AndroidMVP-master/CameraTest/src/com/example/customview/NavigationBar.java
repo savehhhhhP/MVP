@@ -19,11 +19,11 @@ public class NavigationBar extends RelativeLayout {
     private Button btn_left;
     private Button btn_right;
     private TextView tv_title;
+    private RelativeLayout RL;
 
     public NavigationBar(Context context) {
         super(context);
         init(context);
-
     }
 
     public NavigationBar(Context context, AttributeSet arg1) {
@@ -46,6 +46,10 @@ public class NavigationBar extends RelativeLayout {
         btn_left = (Button) findViewById(R.id.leftBtn);
         btn_right = (Button) findViewById(R.id.rightBtn);
         tv_title = (TextView) findViewById(R.id.titleTv);
+        RL= (RelativeLayout)findViewById(R.id.mainRL);
+    }
+    public void setInvisible(){
+          RL.setVisibility(RelativeLayout.INVISIBLE);
     }
 
     public void setBtnLeftClickListener(OnClickListener listener) {

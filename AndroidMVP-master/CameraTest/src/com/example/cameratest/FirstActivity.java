@@ -26,6 +26,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -204,7 +206,7 @@ public class FirstActivity extends Activity {
             intent.setClass(FirstActivity.this, CoverCardActivity.class);
             intent.putExtra("parent", parent);
             if (!isLauchPage && i == 0) {                                  //lxl 是目录则不做任何事，不是目录则添加长按响应
-//				do nothing
+
             } else {
                 ivList.get(i).setOnLongClickListener(new ImageViewLongClickListener(intent));
             }
@@ -223,8 +225,8 @@ public class FirstActivity extends Activity {
 //                for(int i=0;i<ivList.size();i++){
 //                    ivList.get(i).setImageBitmap(null);
 //                }
-                //deleteFile(Constants.dir_path_pic);
-                //deleteFile(Constants.dir_path_yy);
+                DataSyn.delFile(Constants.dir_path_pic);
+                DataSyn.delFile(Constants.dir_path_yy);
                 goSyn();
                 Log.i(TAG,"选择了确定");
             }
@@ -251,8 +253,7 @@ public class FirstActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-//			判断是否为目录   如果为目录则进入
-            if (!isLauchPage && position == 0) {                                                //position ==0？
+            if (!isLauchPage && position == 0) {                                                //不是根节点（主界面）
                 finish();
             } else {
                 Card cardItem = cardMap.get(position);
@@ -267,6 +268,8 @@ public class FirstActivity extends Activity {
                         startActivity(intent);
                     } else {
                         Toast.makeText(FirstActivity.this, getString(R.string.FirstActivity_msg_cover), Toast.LENGTH_SHORT).show();
+                        iv1.startAnimation(anim);
+                        iv1_t.startAnimation(anim);
                     }
                 } else {
                     Toast.makeText(FirstActivity.this, getString(R.string.FirstActivity_msg_cover), Toast.LENGTH_SHORT).show();
@@ -456,8 +459,12 @@ public class FirstActivity extends Activity {
 
 
     boolean isLauchPage;
+    Animation anim;
+
 
     public void initUI() {
+        //动画资源获取
+        anim = AnimationUtils.loadAnimation(this,R.anim.anim);
         ivList = new ArrayList<ImageView>();
         ivList_t = new ArrayList<ImageView>();
         tvList = new ArrayList<TextView>();

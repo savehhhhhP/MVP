@@ -32,6 +32,7 @@ import com.example.util.DataBaseHelper;
 import com.example.util.GlobalUtil;
 
 public class ChildActivity extends Activity {
+    static final String TAG = "ChildActivity";
 
     NavigationBar nb;
     ImageView iv1;
@@ -66,12 +67,12 @@ public class ChildActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
+        Log.i(TAG,"!!!!!!");
         initUI();
         initData();
     }
 
     public void setOnClickListener() {
-
         for (int i = 0; i < ivList.size(); i++) {
             ivList.get(i).setOnClickListener(new ImageViewListener(i));
         }
@@ -95,7 +96,7 @@ public class ChildActivity extends Activity {
 //					此处避免了 一种情况   比如： cardMap的size是 3  但是点击的位置是2 这符合第一个判断  但是 实际上的这个位置是空的   
                 if (cardItem != null) {
                     if (Constants.TYPE_CATEGORY.equals(cardItem.getType())) {
-                        Log.i("sjl", "正在进入下一级界面");
+                        Log.i("TAG", "正在进入下一级界面");
 //							是目录节点  则点击进入下一级目录
                         Intent intent = new Intent();
                         intent.putExtra("isLauchPage", false);
@@ -125,14 +126,15 @@ public class ChildActivity extends Activity {
                         audioFile = null;
                     }
                 } else {
-                    Log.i("sjl", "正在发音..不存在这个ITEM ");
+                    Log.i("TAG", "正在发音..不存在这个ITEM ");
                 }
             }
         }
     }
 
     public void initNavigationBar() {
-        nb.setTvTitle("小雨滴");
+        Log.i(TAG,"init navigationbar");
+        nb.setTvTitle("小雨滴2");
         nb.setBtnRightVisble(false);
         nb.setBtnLeftVisble(false);
     }
@@ -152,16 +154,16 @@ public class ChildActivity extends Activity {
     public void initData() {
         myDbHelper = DataBaseHelper.getDataBaseHelper(ChildActivity.this);
         cardMap = myDbHelper.getChildsByParent(parent);
-        Log.i("sjl", "parent id is :" + parent);
+        Log.i("TAG", "parent id is :" + parent);
         Iterator it = cardMap.keySet().iterator();
         if (cardMap != null) {
-            Log.i("sjl", "cardlist.size is " + cardMap.size());
+            Log.i("TAG", "cardlist.size is " + cardMap.size());
             while (it.hasNext()) {
                 Integer key = (Integer) it.next();
                 Card cardItem = cardMap.get(key);
                 int position = cardItem.getPosition();
 //		 			此处设置将有数据的 图片位置 flag 设置为1 其余 值为0的不予显示
-                Log.i("sjl", "visible i :" + position);
+                Log.i("TAG", "visible i :" + position);
                 displayFlag[position] = 1;
 //		 			File picFile = new File(Constants.dir_path_pic, cardItem.getImage_filename());
 //			    	Uri uri=Uri.fromFile(picFile);
@@ -183,7 +185,6 @@ public class ChildActivity extends Activity {
         }
         for (int i = 1; i < displayFlag.length; i++) {
             if (displayFlag[i] == 0) {
-                Log.i("sjl", "invisible i :" + i);
                 ivList.get(i).setVisibility(View.INVISIBLE);
                 tvList.get(i).setVisibility(View.INVISIBLE);
             }
@@ -228,18 +229,19 @@ public class ChildActivity extends Activity {
         ivList.add(iv4);
         ivList.add(iv5);
         ivList.add(iv6);
+        Log.i(TAG,"!!!!!  运行中");
 
         Intent intent = getIntent();
         isLauchPage = intent.getBooleanExtra("isLauchPage", true);
+        //首页
         if (isLauchPage) {
-            Log.i("sjl", "充当首页的角色");
             initNavigationBar();
             parent = "af35431e-cdea-4d66-b32f-57bf683a25ce";
         } else {
-            Log.i("sjl", "充当子页面的角色");
             parent = intent.getStringExtra("parent");
-            initNavigationBar2(intent.getStringExtra("catogeryName"));
+            //initNavigationBar2(intent.getStringExtra("catogeryName"));
         }
+        nb.setVisibility(View.GONE);
         setOnClickListener();
         initTextView();
     }

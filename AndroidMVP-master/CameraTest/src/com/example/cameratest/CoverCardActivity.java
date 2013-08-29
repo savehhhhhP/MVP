@@ -1,6 +1,7 @@
 package com.example.cameratest;
 
 import android.app.Activity;
+import android.app.TabActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,12 +14,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import android.widget.TabHost;
 import com.example.customview.NavigationBar;
 import com.example.util.Constants;
 import com.example.util.DataBaseHelper;
 import com.umeng.analytics.MobclickAgent;
 
-public class CoverCardActivity extends Activity {
+public class CoverCardActivity extends TabActivity {
 
     NavigationBar nb;
     ListView lv;
@@ -32,14 +34,26 @@ public class CoverCardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cover);
-
+        setContentView(R.layout.activity_cover1);
         Intent intent = getIntent();
         replacePosition = intent.getIntExtra("position", 0);
-        Log.i("lxl", "替换界面  得到的replacePosition:" + replacePosition);
         parent = intent.getStringExtra("parent");
-        Log.i("lxl", "替换界面  得到的parent id is:" + parent);
         init();
+        initTab();
+    }
+
+    private void initTab() {
+        //获取到TabHost组件
+        TabHost tabHost = getTabHost();
+        TabHost.TabSpec tab1 = tabHost.newTabSpec("tab1")
+                .setIndicator("卡片")
+                .setContent(R.id.tabCard);
+        TabHost.TabSpec tab2 = tabHost.newTabSpec("tab2")
+                .setIndicator("目录")
+                .setContent(R.id.tabCategory);
+        //添加标签页
+        tabHost.addTab(tab1);
+        tabHost.addTab(tab2);
     }
 
     @Override
