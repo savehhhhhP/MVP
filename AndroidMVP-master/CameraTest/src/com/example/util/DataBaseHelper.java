@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,6 +29,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
     private static DataBaseHelper dataBaseHelper;
 
+    public void createNewUser(String userName,String userId,String userRootCategory){
+        ContentValues userValue = new ContentValues();
+        userValue.put("name",userName);
+        userValue.put("id",userId);
+        userValue.put("root_category",userRootCategory);
+        myDataBase.insert("user",null,userValue);
+    }
+
+    /**
+     * 根据用户名查询用户id
+     * @param UserName 用户名
+     */
+    public String getUID(String UserName){
+        Cursor c = getUserId(UserName);
+        String id=null;
+        if(c !=null){
+            while (c.moveToNext()) {
+                id = c.getString(c.getColumnIndex("id"));
+            }
+        }
+        return id;
+    }
+    /**
+     * 取已存在的用户
+     * @return UserNames 用户名
+     */
+    public String[] getName(){
+        Cursor c = getUserName();
+        String[] UserNames=null;
+        if(c !=null){
+            UserNames=new String[c.getCount()];
+            int i=0;
+            while (c.moveToNext()) {
+                UserNames[i++] = c.getString(c.getColumnIndex("name"));
+            }
+        }
+        return UserNames;
+    }
+
     /**
      * 根据id获取根节点
      * @param UserId 用户id
@@ -37,7 +75,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public String getParent(String UserId){
         String parent="";
-        Cursor c = getUserId(UserId);
+        Cursor c = getUserCategory(UserId);
         if (c != null) {
             while (c.moveToNext()) {
                 parent = c.getString(c.getColumnIndex("_id"));
@@ -284,10 +322,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getUserId(String id) {
+    private Cursor getUserCategory(String id) {
         Cursor c = myDataBase.rawQuery("SELECT root_category as _id FROM user WHERE id = ?", new String[]{id});
         return c;
     }
+    private Cursor getUserId(String userName){
+        Cursor c = myDataBase.rawQuery("SELECT id FROM user WHERE name = ?", new String[]{userName});
+        return c;
+    }
+
+    private Cursor getUserName(){
+        Cursor c = myDataBase.rawQuery("SELECT name from user",null);
+        return c;
+    }
+
 
     /**
      * 插入目录

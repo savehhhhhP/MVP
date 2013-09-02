@@ -29,13 +29,13 @@
                         android:layout_height="wrap_content"
                         android:text="新用户："
                         android:id="@+id/rbNewUser" android:layout_gravity="right|top" android:layout_weight="1"
-                        android:checked="true"/>
+                        android:checked="false"/>
                 <RadioButton
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="老用户："
                         android:id="@+id/rbOldUser" android:layout_gravity="center_vertical|right|top"
-                        android:layout_weight="3"/>
+                        android:layout_weight="1"/>
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
@@ -47,7 +47,7 @@
                 >
             <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="0dp" android:layout_weight="3" android:focusable="true">
+                    android:layout_height="0dp" android:layout_weight="1" android:focusable="true">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,27 +57,18 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textView2"
-                        android:id="@+id/newUserName" android:focusable="false"/>
+                        android:id="@+id/newUserName"/>
             </RelativeLayout>
             <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0dp" android:layout_weight="1">
-            </RelativeLayout>
-            <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp" android:layout_weight="4">
                 <TextView android:id="@+id/textView3" android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:gravity="center_horizontal" android:text="选择您的姓名：" android:layout_gravity="right"/>
-                <EditText
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView3"
-                        android:id="@+id/oldUserName"/>
                 <Spinner
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spOldUserName" android:layout_below="@+id/oldUserName"/>
+                        android:id="@+id/spOldUserName" android:layout_below="@+id/textView3"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

@@ -10,6 +10,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.LabeledIntent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -70,6 +71,7 @@ public class ChildActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
         initUI();
+        setOnClickListener();
         initData();
     }
 
@@ -89,73 +91,74 @@ public class ChildActivity extends Activity {
         @Override
         public void onClick(View v) {
             if (!isLauchPage && position == 0) {
-//				非首页的 第一个ITEM 为返回按钮
+				//非首页的 第一个ITEM 为返回按钮
                 finish();
             } else {
-//				判断是否为目录
+				//判断是否为目录
                 Card cardItem = cardMap.get(position);
-//					此处避免了 一种情况   比如： cardMap的size是 3  但是点击的位置是2 这符合第一个判断  但是 实际上的这个位置是空的   
+					//此处避免了 一种情况   比如： cardMap的size是 3  但是点击的位置是2 这符合第一个判断  但是 实际上的这个位置是空的
                 if (cardItem != null) {
                     if (Constants.TYPE_CATEGORY.equals(cardItem.getType())) {
-                        Log.i("TAG", "正在进入下一级界面");
-//							是目录节点  则点击进入下一级目录
-                        Intent intent = new Intent();
-                        intent.putExtra("isLauchPage", false);
-                        intent.putExtra("name", cardItem.getName());
-                        intent.putExtra("parent", cardItem.getId());
-                        intent.setClass(ChildActivity.this, ChildActivity.class);
-                        startActivity(intent);
+                        getInCategory(cardItem);                       //进入目录节点
                     } else {
-                        setAnimation(position);
-                        Toast.makeText(ChildActivity.this, "dadafasdfasdfadf", Toast.LENGTH_SHORT).show();
-                        File audioFile = new File(Constants.dir_path_yy + cardItem.getAudio_filename());
-                        if (audioFile != null && audioFile.exists()) {
-                            MediaPlayer mp = MediaPlayer.create(ChildActivity.this, Uri.fromFile(audioFile));
-                            if (mp != null) {
-                                mp.start();
-                                mp.setOnCompletionListener(new OnCompletionListener() {
-                                    @Override
-                                    public void onCompletion(MediaPlayer mp) {
-                                        mp.release();
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(ChildActivity.this, "未找到声音文件", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(ChildActivity.this, "未找到声音文件", Toast.LENGTH_SHORT).show();
-                        }
-                        audioFile = null;
+                        playAnimation(cardItem);                      //播放动画
+                        playVideo(cardItem);                          //播放录音
                     }
                 } else {
                     Log.i("TAG", "正在发音..不存在这个ITEM ");
                 }
             }
         }
+        private void playAnimation(Card cardItem) {
+            Intent intent = new Intent(ChildActivity.this,playAnimActivity.class);
+            intent.putExtra("filename",cardItem.getImage_filename());
+            intent.putExtra("text",cardItem.getName());
+            startActivity(intent);
+        }
+        private void playVideo(Card cardItem){
+            Log.i(TAG,"know is playVideo");
+            File audioFile = new File(Constants.dir_path_yy + cardItem.getAudio_filename());
+            if (audioFile != null && audioFile.exists()) {
+                MediaPlayer mp = MediaPlayer.create(ChildActivity.this, Uri.fromFile(audioFile));
+                if (mp != null) {
+                    mp.start();
+                    mp.setOnCompletionListener(new OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.release();
+                        }
+                    });
+                } else {
+                    privateShortToast("未找到声音文件");
+                }
+            } else {
+                privateShortToast("未找到声音文件");
+            }
+        }
+        private void getInCategory(Card cardItem){
+            Log.i(TAG, "正在进入下一级界面");
+            Intent intent = new Intent();
+            intent.putExtra("isLauchPage", false);
+            intent.putExtra("name", cardItem.getName());
+            intent.putExtra("parent", cardItem.getId());
+            intent.setClass(ChildActivity.this, ChildActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * 自定义toast
+     */
+    private void privateShortToast(String text){
+        Toast.makeText(ChildActivity.this,text, Toast.LENGTH_SHORT).show();
+    }
+    private void privateLongToast(String text){
+        Toast.makeText(ChildActivity.this,text, Toast.LENGTH_LONG).show();
     }
 
     private void setAnimation(int position) {
         ivList.get(position).startAnimation(anim);
         ivList_t.get(position).startAnimation(anim);
-    }
-
-    public void initNavigationBar() {
-        Log.i(TAG,"init navigationbar");
-        nb.setTvTitle("小雨滴2");
-        nb.setBtnRightVisble(false);
-        nb.setBtnLeftVisble(false);
-    }
-
-    public void initNavigationBar2(String catogeryName) {
-        nb.setTvTitle(catogeryName);
-        nb.setBtnLeftBacground(R.drawable.ic_back);
-        nb.setBtnRightVisble(false);
-        nb.setBtnLeftClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     public void initData() {
@@ -178,7 +181,6 @@ public class ChildActivity extends Activity {
 
                 Bitmap mybitmap = GlobalUtil.preHandleImage(null, Constants.dir_path_pic + cardItem.getImage_filename());
                 ivList.get(position).setImageBitmap(mybitmap);
-
 
                 if (position != 0 || (position == 0 && isLauchPage)) {
                     if (cardItem.getType().equals(Constants.TYPE_CATEGORY)) {
@@ -250,7 +252,7 @@ public class ChildActivity extends Activity {
             //initNavigationBar2(intent.getStringExtra("catogeryName"));
         }
         nb.setVisibility(View.GONE);
-        setOnClickListener();
+
         initTextView();
     }
 

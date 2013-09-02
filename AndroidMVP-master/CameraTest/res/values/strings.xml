@@ -9,6 +9,7 @@
     <string name="title_activity_edit_card">EditCardActivity</string>
     <string name="title_activity_edit2">Edit2Activity</string>
     <string name="title_activity_child">ChildActivity</string>
+    <string name="title_activity_anim">ChildActivity</string>
 
     <string name="manifest_user">user</string>
     <string name="manifest_id">id</string>

@@ -157,7 +157,6 @@ public class EditActivity extends TabActivity {
                 startCardDetail(datasource4cato, position);
             }
         });
-
 //		begin 增加 删除卡片或目录的功能 2013 07 31
         cardsListView.setOnItemLongClickListener(new ListViewLongClickListener(datasource4card, EditActivity.this, myDbHelper));
         categoryListView.setOnItemLongClickListener(new ListViewLongClickListener(datasource4cato, EditActivity.this, myDbHelper));

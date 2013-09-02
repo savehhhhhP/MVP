@@ -46,8 +46,12 @@
         <activity
                 android:name=".LoginActivity"
                 android:label="@string/title_activity_first"
+                android:icon="@drawable/icon4adult"
                 android:screenOrientation="portrait">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <activity
@@ -55,10 +59,7 @@
                 android:label="@string/title_activity_first"
                 android:icon="@drawable/icon4adult"
                 android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity
                 android:name="com.example.cameratest.EditActivity"
@@ -72,6 +73,10 @@
         <activity
                 android:name=".CoverCardActivity"
                 android:label="@string/title_activity_edit2">
+        </activity>
+        <activity
+                android:name=".playAnimActivity"
+                android:label="@string/title_activity_anim">
         </activity>
         <activity
                 android:name="com.example.cameratest.ChildActivity"

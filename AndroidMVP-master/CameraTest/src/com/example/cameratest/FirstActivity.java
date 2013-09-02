@@ -100,6 +100,7 @@ public class FirstActivity extends Activity {
         firstTime = sp.getBoolean("firstTime", true);
         //第一次启动时候复制资源到手机XIAOYUDI目录
         if(firstTime){
+
             images = this.getResources().getStringArray(R.array.images);
             audios = this.getResources().getStringArray(R.array.audios);
             try {
@@ -149,6 +150,8 @@ public class FirstActivity extends Activity {
 //		begin 以下是 为了在编辑界面返回到主页面的时候  刷新出现内容不同步的 临时解决方案
         for (int i = 1; i < ivList.size(); i++) {
             ivList.get(i).setImageResource(R.drawable.ic_add);
+            ivList_t.get(i).setAlpha(0);                       //初始化
+            tvList.get(i).setText(null);
         }
 //		end by 2013 07 31
         Log.i(TAG, "parent id is :" + parent);
@@ -162,9 +165,11 @@ public class FirstActivity extends Activity {
                 int position = cardItem.getPosition();
                 Log.i(TAG, "正在设置图片");
                 Bitmap mybitmap = GlobalUtil.preHandleImage(null, Constants.dir_path_pic + cardItem.getImage_filename());    //获得图片到 bitmap 之后放到imageViewList  ，循环结束后所有imageView都有图片
-                Log.i(TAG, "获得了资源");
+                Log.i(TAG, "获得了资源" + position+"    "+mybitmap.toString());
                 if(mybitmap!=null){
                     ivList.get(position).setImageBitmap(mybitmap);
+                }else{
+                    continue;
                 }
                 Log.i(TAG,ivList.get(position).toString());
                 if (cardItem.getType().equals(Constants.TYPE_CATEGORY)) {                            //lxl设置目录和一般card的相框样式
@@ -172,6 +177,7 @@ public class FirstActivity extends Activity {
                 } else {
                     ivList_t.get(position).setImageResource(R.drawable.ic_card);
                 }
+                ivList_t.get(position).setAlpha(255);
                 tvList.get(position).setText(cardItem.getName());                                  //lxl设置文字
             }
         }
@@ -270,10 +276,6 @@ public class FirstActivity extends Activity {
                         intent.setClass(FirstActivity.this, FirstActivity.class);
                         startActivity(intent);
                     } else {
-                        ivList.get(position).startAnimation(anim);
-                        ivList_t.get(position).startAnimation(anim);
-                        tvList.get(position).startAnimation(anim);
-                        //tr1.startAnimation(anim);
                         Toast.makeText(FirstActivity.this, getString(R.string.FirstActivity_msg_cover), Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -485,15 +487,10 @@ public class FirstActivity extends Activity {
     SQLiteDatabase db;
 
     boolean isLauchPage;
-    Animation anim;
-    RelativeLayout rl1;
-    TableRow tr1;
+
 
     public void initUI() {
         //动画资源获取
-        anim = AnimationUtils.loadAnimation(this, R.anim.anim);
-        rl1 = (RelativeLayout)findViewById(R.id.rl1);
-        tr1 = (TableRow)findViewById(R.id.tr1);
         ivList = new ArrayList<ImageView>();
         ivList_t = new ArrayList<ImageView>();
         tvList = new ArrayList<TextView>();
@@ -527,8 +524,10 @@ public class FirstActivity extends Activity {
         isLauchPage = intent.getBooleanExtra("isLauchPage", true);       //取得是否为目录节点的信息，并且做出不同操作
         if (isLauchPage) {
             initNavigationBar();
-//			初始化  首页父节点  从数据库读取
-            parent =myDbHelper.getParent(getString(R.string.firstParent));
+//			初始化  首页父节点  读取从Login传入的数据
+            Intent intentGetData = getIntent();
+            String userId = intentGetData.getStringExtra("userid");
+            parent = myDbHelper.getParent(userId);
             Log.i(TAG,parent+ "");
         } else {
             iv1.setImageResource(R.drawable.ic_return);
@@ -566,11 +565,8 @@ public class FirstActivity extends Activity {
         public MyHandler() {
 
         }
-
         public MyHandler(Looper L) {
-
             super(L);
-
         }
 
         //子类必须重写此方法,接受数据
