@@ -1,9 +1,9 @@
 package com.example.cameratest;
 
-import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
@@ -15,6 +15,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import android.widget.TabHost;
+import android.widget.TabWidget;
+import com.example.customview.HelpDialog;
 import com.example.customview.NavigationBar;
 import com.example.util.Constants;
 import com.example.util.DataBaseHelper;
@@ -37,18 +39,48 @@ public class EditActivity extends TabActivity {
         initTab();
     }
 
+    private TabWidget tabWidget;
+    private TabHost tabHost;
     private void initTab() {
         //获取到TabHost组件
-        TabHost tabHost = getTabHost();
+        tabHost = getTabHost();
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tab1")
                 .setIndicator("卡片")
                 .setContent(R.id.tabCard);
         TabHost.TabSpec tab2 = tabHost.newTabSpec("tab2")
                 .setIndicator("目录")
                 .setContent(R.id.tabCategory);
+        tabWidget = getTabWidget();
         //添加标签页
         tabHost.addTab(tab1);
         tabHost.addTab(tab2);
+
+        for (int i =0; i <tabWidget.getChildCount(); i++) {
+
+            View vvv = tabWidget.getChildAt(i);
+            if(tabHost.getCurrentTab()==i){
+                vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.focus));
+
+            }
+            else {
+                vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.unfocus));
+            }
+        }
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                for (int i = 0; i < tabWidget.getChildCount(); i++) {
+                    View vvv = tabWidget.getChildAt(i);
+                    if (tabHost.getCurrentTab() == i) {
+                        vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.focus));
+                    } else {
+                        vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.unfocus));
+                    }
+                }
+            }
+        });
     }
 
     public void init() {
@@ -66,7 +98,15 @@ public class EditActivity extends TabActivity {
     public void initNavigationBar() {
         nb.setTvTitle("编辑");
         nb.setBtnLeftBacground(R.drawable.ic_back);
-        nb.setBtnRightVisble(false);
+        nb.setBtnRightVisble(true);
+        nb.setBtnRightBacground(R.drawable.btn_help);
+        nb.setBtnRightClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelpDialog test = new HelpDialog(EditActivity.this,getResources().getDrawable(R.drawable.edit_help));
+                test.show();
+            }
+        });
         nb.setBtnLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

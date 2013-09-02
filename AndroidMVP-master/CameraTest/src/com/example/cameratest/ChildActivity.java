@@ -69,7 +69,6 @@ public class ChildActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-        Log.i(TAG,"!!!!!!");
         initUI();
         initData();
     }
@@ -107,7 +106,7 @@ public class ChildActivity extends Activity {
                         intent.setClass(ChildActivity.this, ChildActivity.class);
                         startActivity(intent);
                     } else {
-                        ivList.get(position).startAnimation(anim);
+                        setAnimation(position);
                         Toast.makeText(ChildActivity.this, "dadafasdfasdfadf", Toast.LENGTH_SHORT).show();
                         File audioFile = new File(Constants.dir_path_yy + cardItem.getAudio_filename());
                         if (audioFile != null && audioFile.exists()) {
@@ -133,6 +132,11 @@ public class ChildActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void setAnimation(int position) {
+        ivList.get(position).startAnimation(anim);
+        ivList_t.get(position).startAnimation(anim);
     }
 
     public void initNavigationBar() {
@@ -192,7 +196,6 @@ public class ChildActivity extends Activity {
                 tvList.get(i).setVisibility(View.INVISIBLE);
             }
         }
-
         if (!isLauchPage) {
             ivList.get(0).setImageResource(R.drawable.ic_return);
             tvList.get(0).setText("·µ»Ø");
@@ -240,7 +243,7 @@ public class ChildActivity extends Activity {
         isLauchPage = intent.getBooleanExtra("isLauchPage", true);
         //Ê×Ò³
         if (isLauchPage) {
-            initNavigationBar();
+            //initNavigationBar();
             parent = "af35431e-cdea-4d66-b32f-57bf683a25ce";
         } else {
             parent = intent.getStringExtra("parent");

@@ -9,14 +9,11 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,10 +25,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
+import com.example.customview.HelpDialog;
 import com.example.customview.NavigationBar;
 import com.example.po.Card;
 import com.example.util.*;
@@ -80,7 +76,7 @@ public class FirstActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
+        setContentView(R.layout.activity_first1);
         init();            //lxl系统初始化         对于是否第一次启动给出判断
         initDataBase();    //初始化数据库
         initUI();          //lxl界面初始化
@@ -100,7 +96,6 @@ public class FirstActivity extends Activity {
         if(cardUsedserver==null){
             cardUsedserver = new useCardServer();
         }
-
         sp = getSharedPreferences("xiaoyudi", 0);
         firstTime = sp.getBoolean("firstTime", true);
         //第一次启动时候复制资源到手机XIAOYUDI目录
@@ -275,6 +270,10 @@ public class FirstActivity extends Activity {
                         intent.setClass(FirstActivity.this, FirstActivity.class);
                         startActivity(intent);
                     } else {
+                        ivList.get(position).startAnimation(anim);
+                        ivList_t.get(position).startAnimation(anim);
+                        tvList.get(position).startAnimation(anim);
+                        //tr1.startAnimation(anim);
                         Toast.makeText(FirstActivity.this, getString(R.string.FirstActivity_msg_cover), Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -362,26 +361,19 @@ public class FirstActivity extends Activity {
         nb.setBtnRightClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(FirstActivity.this, EditActivity.class);
-                startActivity(intent);
-            }
-        });
-        nb.setBtnLeftClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 AlertDialog.Builder builder = new Builder(FirstActivity.this);
-                builder.setTitle("设置").setItems(new String[]{"卡片", "目录","同步数据"}, new DialogInterface.OnClickListener() {
+                builder.setTitle("设置").setItems(new String[]{"编辑卡片/目录","使用帮助","同步数据"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent();
-                        intent.setClass(FirstActivity.this, CreatCardActivity.class);
                         switch (which) {
-                            case 0:
-                                intent.putExtra("type", Constants.TYPE_CARD);
+                            case 0:             //编辑卡片/目录
+                                Intent intent = new Intent();
+                                intent.setClass(FirstActivity.this, EditActivity.class);
+                                startActivity(intent);
                                 break;
-                            case 1:
-                                intent.putExtra("type", Constants.TYPE_CATEGORY);
+                            case 1:            //使用帮助
+                                HelpDialog help = new HelpDialog(FirstActivity.this,getResources().getDrawable(R.drawable.first_help));
+                                help.show();
                                 break;
                             case 2:
                                 //intent.putExtra("type",Constants.TYPE_SYN);
@@ -393,9 +385,36 @@ public class FirstActivity extends Activity {
                             default:
                                 break;
                         }
-                        if (which != 2) {
-                            startActivity(intent);
+                    }
+                }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        });
+        nb.setBtnLeftClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new Builder(FirstActivity.this);
+                builder.setTitle("新建").setItems(new String[]{"卡片", "目录"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setClass(FirstActivity.this, CreatCardActivity.class);
+                        switch (which) {
+                            case 0:
+                                intent.putExtra("type", Constants.TYPE_CARD);
+                                break;
+                            case 1:
+                                intent.putExtra("type", Constants.TYPE_CATEGORY);
+                                break;
+                            default:
+                                break;
                         }
+                        startActivity(intent);
                     }
                 }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
 
@@ -465,16 +484,16 @@ public class FirstActivity extends Activity {
 
     SQLiteDatabase db;
 
-    public SQLiteDatabase getDB() {
-        db = openOrCreateDatabase("xiaoyudi.db", Context.MODE_PRIVATE, null);
-        return db;
-    }
-
-
     boolean isLauchPage;
+    Animation anim;
+    RelativeLayout rl1;
+    TableRow tr1;
 
     public void initUI() {
         //动画资源获取
+        anim = AnimationUtils.loadAnimation(this, R.anim.anim);
+        rl1 = (RelativeLayout)findViewById(R.id.rl1);
+        tr1 = (TableRow)findViewById(R.id.tr1);
         ivList = new ArrayList<ImageView>();
         ivList_t = new ArrayList<ImageView>();
         tvList = new ArrayList<TextView>();

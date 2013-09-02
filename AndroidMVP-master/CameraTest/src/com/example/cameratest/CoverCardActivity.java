@@ -1,6 +1,5 @@
 package com.example.cameratest;
 
-import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import com.example.customview.NavigationBar;
 import com.example.util.Constants;
 import com.example.util.DataBaseHelper;
@@ -42,18 +42,48 @@ public class CoverCardActivity extends TabActivity {
         initTab();
     }
 
+    private TabWidget tabWidget;
+    private TabHost tabHost;
     private void initTab() {
         //获取到TabHost组件
-        TabHost tabHost = getTabHost();
+        tabHost = getTabHost();
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tab1")
                 .setIndicator("卡片")
                 .setContent(R.id.tabCard);
         TabHost.TabSpec tab2 = tabHost.newTabSpec("tab2")
                 .setIndicator("目录")
                 .setContent(R.id.tabCategory);
+        tabWidget = getTabWidget();
         //添加标签页
         tabHost.addTab(tab1);
         tabHost.addTab(tab2);
+
+        for (int i =0; i <tabWidget.getChildCount(); i++) {
+
+            View vvv = tabWidget.getChildAt(i);
+            if(tabHost.getCurrentTab()==i){
+                vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.focus));
+            }
+            else {
+                vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.unfocus));
+            }
+        }
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+
+            @Override
+            public void onTabChanged(String tabId) {
+                for (int i =0; i < tabWidget.getChildCount(); i++) {
+                    View vvv = tabWidget.getChildAt(i);
+                    if(tabHost.getCurrentTab()==i){
+                        vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.focus));
+                    }
+                    else {
+                        vvv.setBackgroundDrawable(getResources().getDrawable(R.drawable.unfocus));
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -76,6 +106,7 @@ public class CoverCardActivity extends TabActivity {
     public void initNavigationBar() {
         nb.setTvTitle("替换");
         nb.setBtnRightVisble(false);
+
         nb.setBtnLeftBacground(R.drawable.ic_back);
         nb.setBtnLeftClickListener(new OnClickListener() {
             @Override
@@ -83,6 +114,7 @@ public class CoverCardActivity extends TabActivity {
                 finish();
             }
         });
+
     }
 
     DataBaseHelper myDbHelper;

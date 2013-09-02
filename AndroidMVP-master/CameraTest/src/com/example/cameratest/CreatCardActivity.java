@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.customview.HelpDialog;
 import com.example.customview.NavigationBar;
 import com.example.util.Constants;
 import com.example.util.DataBaseHelper;
@@ -112,11 +113,13 @@ public class CreatCardActivity extends Activity implements OnClickListener {
                 finish();
             }
         });
-        nb.setBtnRightVisble(false);
+        nb.setBtnRightVisble(true);
+        nb.setBtnRightBacground(R.drawable.btn_help);
         nb.setBtnRightClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(CreatCardActivity.this, "功能开发中..", Toast.LENGTH_LONG).show();
+                HelpDialog test = new HelpDialog(CreatCardActivity.this,getResources().getDrawable(R.drawable.newcard_help));
+                test.show();
             }
         });
     }

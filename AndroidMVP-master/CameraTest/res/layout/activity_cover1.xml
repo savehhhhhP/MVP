@@ -53,12 +53,15 @@
                             android:max="1"
                             android:minHeight="5dp"
                             android:progress="1"/>
-                    <ListView
-                            android:id="@+id/listView2"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            >
-                    </ListView>
+                        <ListView
+                                android:id="@+id/listView2"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:transcriptMode="alwaysScroll"
+                                android:scrollbarFadeDuration="0"
+                                android:fadeScrollbars="false"
+                                >
+                        </ListView>
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/tabCard"
@@ -90,16 +93,20 @@
                             android:max="1"
                             android:minHeight="5dp"
                             android:progress="1"/>
-                    <ListView
-                            android:id="@+id/listView"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            />
+                        <ListView
+                                android:id="@+id/listView"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:transcriptMode="alwaysScroll"
+                                android:scrollbarFadeDuration="0"
+                                android:fadeScrollbars="false"
+                                />
+
                 </LinearLayout>
             </FrameLayout>
             <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="0dp" android:layout_weight="2">
+                    android:layout_height="0dp" android:layout_weight="1">
                 <TabWidget
                         android:id="@android:id/tabs"
                         android:layout_alignParentBottom="true"

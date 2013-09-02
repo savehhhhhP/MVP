@@ -3,24 +3,25 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
 	android:interpolator="@android:anim/linear_interpolator">
 	<!-- 定义缩放变换 -->
-	<!--<scale android:fromXScale="1.0"  -->
-		<!--android:toXScale="0.01"  -->
-		<!--android:fromYScale="1.0"  -->
-		<!--android:toYScale="0.01"  -->
+	<scale android:fromXScale="1.0"
+		android:toXScale="2.0"
+		android:fromYScale="1.0"
+		android:toYScale="2.0"
+		android:pivotX="50%"
+		android:pivotY="50%"
+		android:fillAfter="false"
+		android:duration="2000"
+        android:interpolator="@android:anim/decelerate_interpolator"/>
+	<!-- 定义透明度的变换 -->
+	<!--<alpha-->
+		<!--android:fromAlpha="1"-->
+		<!--android:toAlpha="0.05"-->
+		<!--android:duration="3000"/>-->
+	 <!--定义旋转变换 -->
+	<!--<rotate -->
+		<!--android:fromDegrees="0" -->
+		<!--android:toDegrees="180"-->
 		<!--android:pivotX="50%" -->
 		<!--android:pivotY="50%" -->
-		<!--android:fillAfter="true" -->
-		<!--android:duration="3000"/> -->
-	<!-- 定义透明度的变换 -->
-	<alpha
-		android:fromAlpha="1"
-		android:toAlpha="0.05"
-		android:duration="3000"/>
-	 <!--定义旋转变换 -->
-	<rotate 
-		android:fromDegrees="0" 
-		android:toDegrees="180"
-		android:pivotX="50%" 
-		android:pivotY="50%" 
-		android:duration="3000"/>
+		<!--android:duration="3000"/>-->
 </set>

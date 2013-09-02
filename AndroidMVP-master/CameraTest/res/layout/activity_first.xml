@@ -8,13 +8,13 @@
     <com.example.customview.NavigationBar
             android:id="@+id/navigationBar_edit"
             android:layout_width="fill_parent"
-            android:layout_height="50dip">
+            android:layout_height="wrap_content">
     </com.example.customview.NavigationBar>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="0dip" android:layout_weight="1"
                   android:id="@+id/linearLayout1">
         <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                        android:id="@+id/relativeLayout5" android:layout_margin="@dimen/rlayoutMargin">
+                        android:id="@+id/ll1" android:layout_margin="@dimen/rlayoutMargin">
             <ImageView android:id="@+id/imageView1"
                        android:layout_width="fill_parent"
                        android:layout_height="fill_parent"
@@ -36,7 +36,7 @@
                       android:textColor="@color/firstText" android:layout_marginBottom="@dimen/textBottomMargin"/>
         </RelativeLayout>
         <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                        android:id="@+id/relativeLayout6" android:layout_margin="@dimen/rlayoutMargin">
+                        android:id="@+id/ll2" android:layout_margin="@dimen/rlayoutMargin">
             <ImageView android:id="@+id/imageView2" android:layout_width="fill_parent" android:layout_weight="5"
                        android:layout_height="fill_parent" android:paddingTop="8dp" android:paddingBottom="30dp"
                        android:paddingLeft="10dp" android:paddingRight="12dp" android:src="@drawable/ic_add"/>
@@ -53,7 +53,7 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="0dip" android:layout_weight="1"
                   android:id="@+id/linearLayout">
         <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                        android:id="@+id/relativeLayout3" android:layout_margin="@dimen/rlayoutMargin">
+                        android:id="@+id/ll3" android:layout_margin="@dimen/rlayoutMargin">
             <ImageView android:id="@+id/imageView3" android:layout_width="fill_parent" android:layout_weight="5"
                        android:layout_height="fill_parent" android:paddingTop="8dp" android:paddingBottom="30dp"
                        android:paddingLeft="10dp" android:paddingRight="12dp" android:src="@drawable/ic_add"/>
@@ -66,7 +66,7 @@
                       android:layout_marginBottom="@dimen/textBottomMargin"/>
         </RelativeLayout>
         <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                        android:id="@+id/relativeLayout4" android:layout_margin="@dimen/rlayoutMargin">
+                        android:id="@+id/ll4" android:layout_margin="@dimen/rlayoutMargin">
             <ImageView android:id="@+id/imageView4" android:layout_width="fill_parent" android:layout_weight="5"
                        android:layout_height="fill_parent" android:paddingTop="8dp" android:paddingBottom="30dp"
                        android:paddingLeft="10dp" android:paddingRight="12dp" android:src="@drawable/ic_add"/>
@@ -87,7 +87,7 @@
 
             >
         <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                        android:id="@+id/relativeLayout2" android:layout_margin="@dimen/rlayoutMargin">
+                        android:id="@+id/ll5" android:layout_margin="@dimen/rlayoutMargin">
             <ImageView
                     android:id="@+id/imageView5"
                     android:layout_width="fill_parent"
@@ -111,7 +111,7 @@
                     android:layout_marginBottom="@dimen/textBottomMargin"/>
         </RelativeLayout>
         <RelativeLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                        android:id="@+id/relativeLayout1" android:layout_margin="@dimen/rlayoutMargin">
+                        android:id="@+id/ll6" android:layout_margin="@dimen/rlayoutMargin">
             <ImageView
                     android:id="@+id/imageView6"
                     android:layout_width="fill_parent"
